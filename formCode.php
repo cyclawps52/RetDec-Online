@@ -2,7 +2,9 @@
 
 # file variables
 $targetDir = "/var/www/html/uploads/";
-$targetFile = $targetDir.$_FILES["file"]["name"];
+$targetName = md5($_FILES["file"]["name"]);
+$targetBinFile = $targetDir.$targetName.".bin";
+$targetCFile = $targetDir.$targetName.".c";
 
 echo("
 		<header>
@@ -13,13 +15,13 @@ echo("
 	");
 
 # see if upload was successful
-if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile))
+if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetBinFile))
 {
 	# command to run/flag variables
 	$commandToRun = "retdec-decompiler.py ";
 	$arch = $_POST["arch"];
 	$endian = $_POST["endian"];
-	
+
 	$rawEntryPoint = $_POST["raw-entry-point"];
 	$selectFunctions = $_POST["select-functions"];
 	$selectRanges = $_POST["select-ranges"];
@@ -33,24 +35,24 @@ if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile))
 	# add flag argument based on checkbox status
 	if($arch != "")
 	{
-		$commandToRun = $commandToRun." --arch ".$arch;
+		$commandToRun = $commandToRun." --arch ".escapeshellarg($arch);
 	}
 	if($endian != "")
 	{
-		$commandToRun = $commandToRun." --endian ".$endian;
+		$commandToRun = $commandToRun." --endian ".escapeshellarg($endian);
 	}
 
 	if($rawEntryPoint != "")
 	{
-		$commandToRun = $commandToRun." --raw-entry-point ".$rawEntryPoint;
+		$commandToRun = $commandToRun." --raw-entry-point ".escapeshellarg($rawEntryPoint);
 	}
 	if($selectFunctions != "")
 	{
-		$commandToRun = $commandToRun." --select-functions ".$selectFunctions;
+		$commandToRun = $commandToRun." --select-functions ".escapeshellarg($selectFunctions);
 	}
 	if($selectRanges != "")
 	{
-		$commandToRun = $commandToRun." --select-ranges ".$selectRanges;
+		$commandToRun = $commandToRun." --select-ranges ".escapeshellarg($selectRanges);
 	}
 
 	if($keepUnreachableFunctions === "on")
@@ -75,22 +77,21 @@ if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile))
 	}
 
 	# append fileName to command
-	$commandToRun = $commandToRun." /var/www/html/uploads/".$_FILES["file"]["name"];
+	$commandToRun = $commandToRun.$targetBinFile;
 
 	# append working path to command
-	$commandToRun = $commandToRun." -o /var/www/html/uploads/".$_FILES["file"]["name"].".c";
+	$commandToRun = $commandToRun." -o ".$targetCFile;
 
 
 	# run commands
 	$commandOutput = shell_exec("$commandToRun");
-	$codePath = "/var/www/html/uploads/".$_FILES["file"]["name"].".c";
-	$codeOutput = shell_exec("cat $codePath");
+	$codeOutput = shell_exec("cat $targetCFile");
 
 	# BUTTON CONTROLS
 	echo("
 			<center>
 				<button onclick=\"toggleCommandOutput()\">Toggle Decompile Command Output</button>
-				<a href=\"download.php?file=$codePath\"><button>Download Decompiled Code</button></a>
+				<a href=\"download.php?file=".basename($targetCFile)."\"><button>Download Decompiled Code</button></a>
 				<a href=\"index.html\"><button>Return To Upload</button></a>
 		</center>
 		");
@@ -99,7 +100,7 @@ if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile))
 	echo("
 			<pre id=\"commandOutput\" display=\"none\" style=\":word-wrap:break-word; overflow-wrap:break-word; border:3px solid red; padding-left:3px; white-space:pre-line;\">
 				<center><h3>Decompile Command Output</h3></center>
-				$commandOutput
+				".htmlspecialchars(str_replace($targetDir, "/path/to/", $commandOutput))."
 			</pre>
 		");
 
@@ -107,7 +108,7 @@ if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile))
 	echo("
 			<pre id=\"codeOutput\" style=\"word-wrap:break-word; overflow-wrap:break-word; border:3px solid green; padding-left:3px; white-space:pre-line\">
 				<center><h3>Decompiled Code</h3></center>
-				$codeOutput
+				".htmlspecialchars($codeOutput)."
 			</pre>
 		");
 	
@@ -133,7 +134,7 @@ else
 	echo("<p>File upload failed.</p>");
 	$db1 = $_FILES["file"]["error"];
 	echo("<p>$db1</p>");
-	echo("<p><a href=\"form.html\">Click here to return to upload page.</a></p>");
+	echo("<p><a href=\"index.html\">Click here to return to upload page.</a></p>");
 }
 
 echo("
