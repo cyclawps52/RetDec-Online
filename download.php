@@ -7,7 +7,7 @@ if(!empty($_GET['file'])){
         header("Cache-Control: public");
         header("Content-Description: File Transfer");
         header("Content-Disposition: attachment; filename=$fileName");
-        header("Content-Type: application/zip");
+        header("Content-Type: text/plain");
         header("Content-Transfer-Encoding: binary");
 
         // Read the file
