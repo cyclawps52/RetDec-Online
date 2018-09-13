@@ -1,0 +1,85 @@
+<html>
+<head>
+	<title>RetDec Online</title>
+</head>
+<body>
+	<header>
+		<center><h1>RetDec Online Interface</h1></center>
+	</header>
+
+	<main>
+		<form enctype="multipart/form-data" action="formCode.php" method="post">
+		
+			<!-- Target File -->
+			<section class="step">
+				<h2>Step 1</h2>
+				<input type="file" name="file" value="" required />
+			</section>
+
+			<!-- File types/mandatory flags -->
+			<hr>
+			<section class="step">
+				<h2>Step 2</h2>
+
+				<select name="arch">
+					<option selected value>Select an architecture (optional)</option>	
+					<option value="mips">Mips</option>
+					<option value="pic32">pic32</option>
+					<option value="arm">ARM</option>
+					<option value="thumb">Thumb</option>
+					<option value="powerpc">PowerPC</option>
+					<option value="x86">X86</option>
+					</select>
+
+				<br><select name="endian">
+					<option selected value>Select target endianness (optional)</option>
+					<option value="little">Little</option>
+					<option value="big">Big</option>
+					</select>
+			
+			</section>
+
+			<hr>
+			<section class="step">
+				<h2>Step 3</h2>
+				Entry point address used for raw binary (optional)
+					<input type="text" name="raw-entry-point" pattern="[A-Za-z0-9]*" oninvalid="setCustomValidity('Only A-Z, a-z, and 0-9 are allowed')" oninput="setCustomValidity('')" >
+				<br>Comma separated list of functions to decompile (optional)
+					<input type="text" name="select-functions" pattern="[A-Za-z0-9\-,_]*" oninvalid="setCustomValidity('Only A-Z, a-z, 0-9, -, _, and , are allowed')" oninput="setCustomValidity('')" >
+				<br>Comma separated list of ranges to decompile (optional)
+					<input type="text" name="select-ranges" pattern="-[A-Za-z0-9,]*" oninvalid="setCustomValidity('Only A-Z, a-z, 0-9, -, and , are allowed')" oninput="setCustomValidity('')" >
+			</section>
+
+			<hr>
+			<!-- Command Line Flags -->
+			<section class="step">
+				<h2>Step 4</h2>
+				<input type="checkbox" name="keep-unreachable-functions"> Keep unreachable functions 
+				<br><input type="checkbox" name="backend-keep-all-brackets"> Keep all brackets in generated code
+				<br><input type="checkbox" name="backend-keep-library-funcs"> Keep functions from standard libraries
+				<br><input type="checkbox" name="backend-no-compound-operators"> Emit compound operators (+=) and replace with assignment statements
+				<br><input type="checkbox" name="color-for-ida"> Put IDA Pro color tags to output C file
+
+			</section>
+		
+			<hr>
+			<!-- Submit the file -->
+			<section class="step">
+				<h2>Step 5</h2>
+				<input type="submit" value="Submit File" />
+			</section>
+
+		</form>
+	
+	</main>
+
+	<hr>
+	<footer>
+		<center>
+			Web interface created by: Tristan Fletcher | Hosted by: Andrew Kramer | <a href="http://github.com/avast-tl/retdec">Source code for RetDec</a>
+			<br>For more information: contact andrew dot kramer at dsu dot edu
+		</center>
+	</footer>
+
+</body>
+</html>
