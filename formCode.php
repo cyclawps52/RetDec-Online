@@ -7,6 +7,21 @@ $targetBinFile = $targetDir.$targetName.".bin";
 $targetCFile = $targetDir.$targetName.".c";
 
 echo("
+        <html>
+            <head>
+                <title>RetDec Online Decompiler</title>
+                 <style>
+                     html {background-color: #010101;}
+                     body {
+                     color: green;
+                     font-family: \"Courier\", \"Courier New\", sans-serif;
+                     }
+                 </style>
+            </head>
+     ");
+    
+echo("
+     <body>
 		<header>
 			<center>
 				<h1>RetDec Online Interface</h1>
@@ -89,6 +104,7 @@ if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetBinFile))
 
 	# BUTTON CONTROLS
 	echo("
+         <main>
 			<center>
 				<button onclick=\"toggleCommandOutput()\">Toggle Decompile Command Output</button>
 				<a href=\"download.php?file=".basename($targetCFile)."\"><button>Download Decompiled Code</button></a>
@@ -110,6 +126,7 @@ if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetBinFile))
 				<center><h3>Decompiled Code</h3></center>
 				".htmlspecialchars($codeOutput)."
 			</pre>
+         </main>
 		");
 	
 	# javascript functions
@@ -144,6 +161,8 @@ echo("
 				<br>For more information: contact andrew dot kramer at dsu dot edu
 			</center>
 		</footer>
+     </body>
+     </html>
 	");
 
 ?>
