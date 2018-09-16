@@ -31,7 +31,7 @@ After uploading your binary and selecting any options, the interface will
 
 All files are cleared if they are older than 30 minutes by a simple cron job.
 
-> **find** **/var/www/html/*** -mtime +t30-exec  **rm**  **{}** \;
+> find /var/www/html/uploads/* -mmin +30 -exec rm {} \;
 > */10 * * * * /root/removeOldFiles
 
 ## Community Support
