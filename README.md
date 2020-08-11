@@ -1,8 +1,6 @@
 
 # RetDec-Online
 
-Currently hosted by [Rewzilla](https://github.com/rewzilla) at [retdec.hostbin.org](http://retdec.hostbin.org)
-
 ## What is this?
 
 This is an online wrapper for the [RetDec Decompiler](http://github.com/avast-tl/retdec). This is made for ease of access and all rights are reserved to Avast for the actual RetDec source code. 
